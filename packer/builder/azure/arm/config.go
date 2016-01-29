@@ -57,6 +57,7 @@ type Config struct {
 	tmpOSDiskName        string
 
 	// Authentication with the VM via SSH
+	SSHUserName      string `mapstructure:"ssh_username"`
 	sshAuthorizedKey string
 	sshPrivateKey    string
 
@@ -122,7 +123,10 @@ func newConfig(raws ...interface{}) (*Config, []string, error) {
 }
 
 func setSshValues(c *Config) error {
-	c.Comm.SSHUsername = c.UserName
+	if c.SSHUserName == "" {
+		c.SSHUserName = c.UserName
+	}
+	c.Comm.SSHUsername = c.SSHUserName
 
 	if c.Comm.SSHTimeout == 0 {
 		c.Comm.SSHTimeout = 20 * time.Minute
